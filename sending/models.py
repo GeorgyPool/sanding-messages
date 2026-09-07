@@ -23,7 +23,6 @@ class Recipient(models.Model):
 #         verbose_name = "Письмо"
 #         verbose_name_plural = "Письма"
 #
-#
 # class Sending(models.Model):
 #     END = "end"
 #     CREATE = "create"
