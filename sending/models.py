@@ -15,14 +15,14 @@ class Recipient(models.Model):
         verbose_name_plural = "Получатели"
 
 
-# class Messages(models.Model):
-#     title = models.CharField(max_length=200, verbose_name="Тема письма", help_text="Введите тему письма")
-#     text = models.TextField(verbose_name="Сообщение", help_text="Введите сообщение")
-#
-#     class Mete:
-#         verbose_name = "Письмо"
-#         verbose_name_plural = "Письма"
-#
+class Messages(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Тема письма", help_text="Введите тему письма")
+    text = models.TextField(verbose_name="Сообщение", help_text="Введите сообщение")
+
+    class Mete:
+        verbose_name = "Письмо"
+        verbose_name_plural = "Письма"
+
 # class Sending(models.Model):
 #     END = "end"
 #     CREATE = "create"
