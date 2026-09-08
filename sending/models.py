@@ -34,8 +34,8 @@ class Sending(models.Model):
         (LAUNCHED, "Запущено")
     ]
 
-    start_time = models.DateTimeField(verbose_name="С какого времени доступна рассылка")
-    end_time = models.DateTimeField(verbose_name="До какого времени доступна рассылка")
+    start_time = models.TimeField(verbose_name="С какого времени доступна рассылка")
+    end_time = models.TimeField(verbose_name="До какого времени доступна рассылка")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
     message = models.ForeignKey(Messages, on_delete=models.CASCADE)
     recipients = models.ManyToManyField(Recipient, related_name="getting")
