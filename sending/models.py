@@ -2,8 +2,7 @@ from django.db import models
 
 
 class Recipient(models.Model):
-    email = models.EmailField(unique=True, verbose_name="Электронная почта",
-                              help_text="Введите электронную почту")
+    email = models.EmailField(unique=True, verbose_name="Электронная почта", help_text="Введите электронную почту")
     full_name = models.CharField(max_length=300, verbose_name="Введите Ф.И.О", help_text="Иванов Иван Иванович")
     comment = models.TextField(blank=True, null=True, verbose_name="Комментарий", help_text="Оставьте комментарии")
 
@@ -22,6 +21,7 @@ class Messages(models.Model):
     class Mete:
         verbose_name = "Письмо"
         verbose_name_plural = "Письма"
+
 
 # class Sending(models.Model):
 #     END = "end"
