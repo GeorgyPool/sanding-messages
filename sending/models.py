@@ -23,28 +23,27 @@ class Messages(models.Model):
         verbose_name_plural = "Письма"
 
 
-# class Sending(models.Model):
-#     END = "end"
-#     CREATE = "create"
-#     LAUNCHED = "launched"
-#
-#     STATUS_CHOICES = [
-#         (END, "Завершено"),
-#         (CREATE, "Создано"),
-#         (LAUNCHED, "Запущено")
-#     ]
-#
-#     start_time = models.DateTimeField(verbose_name="С какого времени доступна рассылка")
-#     end_time = models.DateTimeField(verbose_name="До какого времени доступна рассылка")
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-#     message = models.ForeignKey(Messages, on_delete=models.CASCADE)
-#     recipients = models.ManyToManyField(Recipient, related_name="getting")
-#
-#     class Meta:
-#         verbose_name = "Рассылка"
-#         verbose_name_plural = "Рассылки"
-#
-#
+class Sending(models.Model):
+    END = "end"
+    CREATE = "create"
+    LAUNCHED = "launched"
+
+    STATUS_CHOICES = [
+        (END, "Завершено"),
+        (CREATE, "Создано"),
+        (LAUNCHED, "Запущено")
+    ]
+
+    start_time = models.DateTimeField(verbose_name="С какого времени доступна рассылка")
+    end_time = models.DateTimeField(verbose_name="До какого времени доступна рассылка")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    message = models.ForeignKey(Messages, on_delete=models.CASCADE)
+    recipients = models.ManyToManyField(Recipient, related_name="getting")
+
+    class Meta:
+        verbose_name = "Рассылка"
+        verbose_name_plural = "Рассылки"
+
 # class TryingSending(models.Model):
 #     SUCCESS = "success"
 #     NOT_SUCCESS = "not_success"
