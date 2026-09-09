@@ -22,17 +22,16 @@ class Messages(models.Model):
         verbose_name = "Письмо"
         verbose_name_plural = "Письма"
 
+    def __str__(self):
+        return self.title
+
 
 class Sending(models.Model):
-    END = "end"
-    CREATE = "create"
-    LAUNCHED = "launched"
+    END = "Завершено"
+    CREATE = "Создано"
+    LAUNCHED = "Запущенно"
 
-    STATUS_CHOICES = [
-        (END, "Завершено"),
-        (CREATE, "Создано"),
-        (LAUNCHED, "Запущено")
-    ]
+    STATUS_CHOICES = [(END, "Завершено"), (CREATE, "Создано"), (LAUNCHED, "Запущено")]
 
     start_time = models.TimeField(verbose_name="С какого времени доступна рассылка")
     end_time = models.TimeField(verbose_name="До какого времени доступна рассылка")
@@ -43,6 +42,7 @@ class Sending(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
+
 
 # class TryingSending(models.Model):
 #     SUCCESS = "success"

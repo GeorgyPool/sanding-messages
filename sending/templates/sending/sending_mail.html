@@ -1,0 +1,15 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Начать рассылку{% endblock %}
+
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+    <form class="form" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary">Начать рассылку</button>
+    </form>
+</div>
+
+{% endblock %}

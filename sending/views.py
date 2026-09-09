@@ -1,13 +1,28 @@
-from django.shortcuts import render
+import datetime
+
+from django.core.mail import send_mail
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  UpdateView)
+                                  TemplateView, UpdateView)
 
 from sending import models
 
 
-def home(requests):
-    return render(requests, "sending/home.html")
+class HomeTemplateView(TemplateView):
+    template_name = "sending/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recipient"] = models.Recipient.objects.all()
+        context["sendings"] = models.Sending.objects.all()
+
+        now = datetime.datetime.now().time()
+        context["active_sendings"] = models.Sending.objects.filter(start_time__lte=now, end_time__gte=now).exclude(
+            start_time__isnull=True, end_time__isnull=True
+        )
+
+        return context
 
 
 class RecipientListView(ListView):
@@ -78,3 +93,89 @@ class MessageDeleteView(DeleteView):
     template_name = "sending/message_delete.html"
     context_object_name = "message"
     success_url = reverse_lazy("sending:messages")
+
+
+class SendingListView(ListView):
+    model = models.Sending
+    template_name = "sending/sendings.html"
+    context_object_name = "sendings"
+
+
+class SendingCreateView(CreateView):
+    model = models.Sending
+    template_name = "sending/sendings_form.html"
+    fields = ["start_time", "end_time", "message", "recipients"]
+    success_url = reverse_lazy("sending:sendings")
+
+    def form_valid(self, form):
+        start = form.cleaned_data["start_time"]
+        end = form.cleaned_data["end_time"]
+
+        if start >= end:
+            form.add_error("end_time", "Время окончания должно быть позже времени начала.")
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class SendingDetailView(DetailView):
+    model = models.Sending
+    template_name = "sending/sendings_detail.html"
+    context_object_name = "sendings"
+
+    def get_object(self, queryset=None):
+        result = super().get_object(queryset)
+
+        if result.start_time > datetime.datetime.now().time():
+            result.status = models.Sending.CREATE
+            result.save()
+            return result
+        elif result.end_time < datetime.datetime.now().time():
+            result.status = models.Sending.END
+            result.save()
+            return result
+        else:
+            result.status = models.Sending.LAUNCHED
+            result.save()
+            return result
+
+
+class SendingUpdateView(UpdateView):
+    model = models.Sending
+    template_name = "sending/sendings_form.html"
+    fields = ["start_time", "end_time", "message", "recipients"]
+
+    def get_success_url(self):
+        return reverse_lazy("sending:sendings_detail", kwargs={"pk": self.object.pk})
+
+
+class SendingDeleteView(DeleteView):
+    model = models.Sending
+    template_name = "sending/sendings_delete.html"
+    context_object_name = "sendings"
+    success_url = reverse_lazy("sending:sendings")
+
+
+def sending_mail(requests):
+    if requests.method == "POST":
+        sendings = models.Sending.objects.all()
+
+        for sending in sendings:
+            recipients_email = list(sending.recipients.all().values_list("email", flat=True))
+
+            message_obj = models.Messages.objects.get(id=sending.message_id)
+            message_text = message_obj.text
+
+            send_mail(
+                subject=message_obj.title or "Рассылка",
+                message=message_text,
+                from_email="noreply@example.com",
+                recipient_list=recipients_email,
+                fail_silently=False,
+            )
+        return redirect("sending:home")
+
+    return render(requests, "sending/sending_mail.html")

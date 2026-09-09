@@ -1,0 +1,60 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Подробнее о рассылке{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2 mb-2">
+    <a class="btn btn-outline-primary" href="{% url 'sending:sendings' %}">назад</a>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <div class="card mb-4 rounded-5">
+        <div class="card-body bg-primary bg-gradient rounded-5">
+            <h1 class="text-white">{{ sendings.message }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row d-flex justify-content-center">
+
+                <div class="col-6">
+                    <div class="card rounded-5">
+                        <div class="card-body text-white bg-primary bg-gradient rounded-5">
+                            <h5 class="card-title text-center">Получатели:</h5>
+                            <ul class="list-group">
+                                {% for info in sendings.recipients.all %}
+                                <li class="list-item">{{ info }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="card rounded-5">
+                        <div class="card-body text-white bg-primary bg-gradient rounded-5">
+                            <h5 class="card-title text-center">Параметры:</h5>
+                            <p class="card-text">Статус: {{sendings.status}}</p>
+                            <p class="card-text">Начало рассылки: {{ sendings.start_time }}</p>
+                            <p class="card-text">Окончание рассылки: {{ sendings.end_time }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container d-flex justify-content-center mt-5">
+    <p>
+        <a class="btn btn-outline-primary me-2 ms-2" href="{% url 'sending:sendings_update' sendings.pk %}">Редактировать</a>
+        <a class="btn btn-danger me-2 ms-2" href="{% url 'sending:sendings_delete' sendings.pk %}">Удалить</a>
+    </p>
+</div>
+
+{% endblock %}
