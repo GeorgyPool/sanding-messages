@@ -44,16 +44,20 @@ class Sending(models.Model):
         verbose_name_plural = "Рассылки"
 
 
-# class TryingSending(models.Model):
-#     SUCCESS = "success"
-#     NOT_SUCCESS = "not_success"
-#
-#     STATUS_CHOICES = [
-#         (SUCCESS, "Удачно"),
-#         (NOT_SUCCESS, "Не удачно")
-#     ]
-#
-#     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата попытки")
-#     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-#     answer = models.TextField(verbose_name="Ответ почтового сервера")
-#     mailing_list = models.ForeignKey(Sending, on_delete=models.CASCADE)
+class TryingSending(models.Model):
+    SUCCESS = "Удачно"
+    NOT_SUCCESS = "Не удачно"
+
+    STATUS_CHOICES = [
+        (SUCCESS, "Удачно"),
+        (NOT_SUCCESS, "Не удачно")
+    ]
+
+    attempt_time = models.DateTimeField(auto_now_add=True, verbose_name="Дата попытки")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name="Статус попытки")
+    server_response = models.TextField(verbose_name="Ответ почтового сервера")
+    mailing = models.ForeignKey(Sending, on_delete=models.DO_NOTHING, related_name="sending", verbose_name="Рассылка")
+
+    class Meta:
+        verbose_name = "Попытка"
+        verbose_name_plural = "Попытки"
