@@ -3,8 +3,7 @@ import datetime
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  TemplateView, UpdateView)
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 
 from sending import models
 
@@ -160,8 +159,12 @@ class SendingDeleteView(DeleteView):
 
 
 def sending_mail(requests):
+    now = datetime.datetime.now().time()
+
     if requests.method == "POST":
-        sendings = models.Sending.objects.all()
+        sendings = models.Sending.objects.filter(start_time__lte=now, end_time__gte=now)
+        if not sendings.exists():
+            return redirect("sending:home")
 
         for sending in sendings:
             recipients_email = list(sending.recipients.all().values_list("email", flat=True))
@@ -178,4 +181,7 @@ def sending_mail(requests):
             )
         return redirect("sending:home")
 
-    return render(requests, "sending/sending_mail.html")
+    content = models.Sending.objects.filter(start_time__lt=now, end_time__gt=now)
+    context = {"sendings": content}
+
+    return render(requests, "sending/sending_mail.html", context=context)
