@@ -1,0 +1,71 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Домашняя{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="row d-flex justify-content-center mt-5 mb-5">
+
+                <div class="col-4">
+                    <div class="card rounded-5">
+                        <div class="card-body text-white bg-primary bg-gradient rounded-5">
+                            <h5 class="card-title text-center">Получатели:</h5>
+                            <p class="card-text text-center">{{ recipient|length }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card rounded-5">
+                        <div class="card-body text-white bg-primary bg-gradient rounded-5">
+                            <h5 class="card-title text-center">Рассылки:</h5>
+                            <p class="card-text text-center">{{ sendings|length }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card rounded-5">
+                        <div class="card-body text-white bg-primary bg-gradient rounded-5">
+                            <h5 class="card-title text-center">Активные рассылки:</h5>
+                            <p class="card-text text-center">{{ active_sendings|length }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <a class="btn btn-outline-primary" type="button" href="{% url 'sending:sendings_send' %}">Перейти к запуску
+        рассылок</a>
+</div>
+
+<div class="container mt-5 mb-5">
+    <div class="col-12">
+        <div class="row d-flex justify-content-end">
+
+            <div class="col-4">
+                <div class="card rounded-pill">
+                    <div class="card-body bg-gradient rounded-pill text-white" style="background : purple">
+                        <h5 class="card-title text-center">Количество попыток отправки:</h5>
+                        <hr class="border border-white opacity-50">
+                        {% if tryings %}
+                        <p class="card-text text-center">{{ tryings|length }}</p>
+                        {% else %}
+                        <p class="card-text text-center">Попыток пока не было</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

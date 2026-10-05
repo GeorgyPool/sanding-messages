@@ -1,0 +1,40 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Начать рассылку{% endblock %}
+
+
+{% block content %}
+
+{% if sendings %}
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <h1>Доступные рассылки:</h1>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 me-2 ms-2">
+    {% for sending in sendings %}
+    <div class="col">
+        <div class="card rounded-pill">
+            <div class="card-body bg-primary bg-gradient text-white rounded-pill">
+                <h5 class="card-title text-center">{{ sending.message }}</h5>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <form class="form" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-primary">Начать рассылку</button>
+    </form>
+</div>
+
+{% else %}
+<div class="container d-flex justify-content-center">
+    <h1>Активных рассылок нет</h1>
+</div>
+{% endif %}
+
+
+{% endblock %}

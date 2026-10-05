@@ -1,0 +1,22 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Удаление: {{ recipient.full_name }}{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+    <h1>Вы действительно хотите удалить получателя:</h1>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <h1>{{ recipient.full_name }}</h1>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Удалить</button>
+    </form>
+</div>
+
+{% endblock %}

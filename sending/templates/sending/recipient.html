@@ -1,0 +1,52 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Получатели{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="text-center">Все получатели</h1>
+</div>
+
+{% if recipient %}
+
+<div class="container d-flex justify-content-center mb-3">
+    <div class="card rounded-pill">
+        <div class="card-body bg-primary bg-gradient rounded-pill">
+            <a class="btn btn-outline-light" href="{% url 'sending:recipient_create' %}">Добавить получателя</a>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4 me-2 ms-2">
+    {% for info in recipient %}
+    <div class="col">
+        <div class="card text-white rounded-3">
+            <div class="card-body bg-primary bg-gradient rounded-3">
+                <h5 class="card-title">Получатель:</h5>
+                <p class="card-text">{{ info.full_name }}</p>
+                <p class="card-text">{{ info.email }}</p>
+                <p class="card-text">{{ info.comment|default:'Комментарий отсутствует' }}</p>
+                <p>
+                    <a class="btn btn-outline-light" href="{% url 'sending:recipient_detail' info.pk %}">Подробно</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% else %}
+<div class="container">
+    <h5 class="text-center">Получателей пока нет...</h5>
+</div>
+<div class="container d-flex justify-content-center">
+    <div class="card rounded-pill">
+        <div class="card-body bg-primary bg-gradient rounded-pill">
+            <a class="btn btn-outline-light" href="{% url 'sending:recipient_create' %}">Добавить получателя</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

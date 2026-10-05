@@ -1,0 +1,26 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Удалить рассылку{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+    <h1>Вы действительно хотите удалить рассылку</h1>
+</div>
+
+<div class="container d-flex justify-content-center mb-5">
+    <div class="card rounded-3">
+        <div class="card-body bg-primary bg-gradient rounded-3">
+            <p class="card-text text-white">{{ sendings.message }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Удалить</button>
+    </form>
+</div>
+
+{% endblock %}

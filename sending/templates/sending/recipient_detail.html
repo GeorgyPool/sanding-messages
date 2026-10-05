@@ -1,0 +1,28 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Подробно: {{ recipient.full_name }}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-2 mb-2">
+    <a class="btn btn-outline-primary" href="{% url 'sending:recipient' %}">назад</a>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <div class="card rounded-3">
+        <div class="card-body bg-primary bg-gradient text-white rounded-3">
+            <h5 class="card-title">Получатель: {{ recipient.full_name }}</h5>
+            <p class="card-text">Электронная почта: {{ recipient.email }}</p>
+            <p class="card-text">Комментарий: {{ recipient.comment|default:'комментарий отсутствует' }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="container d-flex justify-content-center mt-5">
+    <p>
+        <a class="btn btn-outline-primary me-2 ms-2" href="{% url 'sending:recipient_update' recipient.pk %}">Редактировать</a>
+        <a class="btn btn-danger me-2 ms-2" href="{% url 'sending:recipient_delete' recipient.pk %}">Удалить</a>
+    </p>
+</div>
+
+{% endblock %}
