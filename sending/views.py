@@ -3,7 +3,8 @@ import datetime
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  TemplateView, UpdateView)
 
 from sending import models
 
@@ -15,6 +16,7 @@ class HomeTemplateView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["recipient"] = models.Recipient.objects.all()
         context["sendings"] = models.Sending.objects.all()
+        context["tryings"] = models.TryingSending.objects.all()
 
         now = datetime.datetime.now().time()
         context["active_sendings"] = models.Sending.objects.filter(start_time__lte=now, end_time__gte=now).exclude(
@@ -172,13 +174,22 @@ def sending_mail(requests):
             message_obj = models.Messages.objects.get(id=sending.message_id)
             message_text = message_obj.text
 
-            send_mail(
-                subject=message_obj.title or "Рассылка",
-                message=message_text,
-                from_email="noreply@example.com",
-                recipient_list=recipients_email,
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    subject=message_obj.title or "Рассылка",
+                    message=message_text,
+                    from_email="noreply@example.com",
+                    recipient_list=recipients_email,
+                    fail_silently=False,
+                )
+                models.TryingSending.objects.create(
+                    status=models.TryingSending.SUCCESS, server_response="OK", mailing=sending
+                )
+            except Exception as e:
+                models.TryingSending.objects.create(
+                    status=models.TryingSending.NOT_SUCCESS, server_response=f"Ошибка: {type(e)}", mailing=sending
+                )
+
         return redirect("sending:home")
 
     content = models.Sending.objects.filter(start_time__lt=now, end_time__gt=now)

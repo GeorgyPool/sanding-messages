@@ -48,10 +48,7 @@ class TryingSending(models.Model):
     SUCCESS = "Удачно"
     NOT_SUCCESS = "Не удачно"
 
-    STATUS_CHOICES = [
-        (SUCCESS, "Удачно"),
-        (NOT_SUCCESS, "Не удачно")
-    ]
+    STATUS_CHOICES = [(SUCCESS, "Удачно"), (NOT_SUCCESS, "Не удачно")]
 
     attempt_time = models.DateTimeField(auto_now_add=True, verbose_name="Дата попытки")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name="Статус попытки")
