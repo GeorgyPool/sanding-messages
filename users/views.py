@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, FormView, UpdateView
 
-from .forms import ChangeProfileUser, UserRegistrationForm
+from .forms import (ChangeProfileUser, RecoveryPasswordForm,
+                    UserRegistrationForm)
 from .models import CustomUser
 
 
@@ -39,3 +40,12 @@ class ProfileUserUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("users:profile_user", kwargs={"pk": self.object.pk})
+
+
+class PasswordRecoveryFormView(FormView):
+    """
+    Представление для восстановления пароля
+    """
+
+    template_name = "users/password_recovery.html"
+    form_class = RecoveryPasswordForm

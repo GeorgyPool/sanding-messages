@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, forms
+from django.core.exceptions import ValidationError
 
 from .models import CustomUser
 
@@ -16,6 +17,14 @@ class UserRegistrationForm(UserCreationForm):
         self.fields["password1"].widget.attrs.update({"class": "form-control"})
 
         self.fields["password2"].widget.attrs.update({"class": "form-control"})
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError("Пользователь с такой электронной почтой уже существует")
+
+        return email
 
 
 class ChangeProfileUser(forms.ModelForm):
@@ -44,3 +53,30 @@ class ChangeProfileUser(forms.ModelForm):
         self.fields["email"].widget.attrs.update({"class": "form-control", "placeholder": "Электронная почта"})
 
         self.fields["phone_number"].widget.attrs.update({"class": "form-control", "placeholder": "Телефон"})
+
+    def clean(self):
+        first_name = self.cleaned_data.get("first_name")
+        last_name = self.cleaned_data.get("last_name")
+
+        if first_name and last_name:
+            if CustomUser.objects.filter(first_name=first_name, last_name=last_name).exists():
+                raise ValidationError("Пользователь с таким Именем и Фамилией уже существует")
+
+        return self.cleaned_data
+
+
+class RecoveryPasswordForm(forms.Form):
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super(RecoveryPasswordForm, self).__init__(*args, **kwargs)
+
+        self.fields["email"].widget.attrs.update({"class": "form-control", "placeholder": "Ваша электронная почта"})
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        if not CustomUser.objects.filter(email=email):
+            raise ValidationError("Пользователь с такой почтой не найден \nПопробуйте ввести другую")
+
+        return email

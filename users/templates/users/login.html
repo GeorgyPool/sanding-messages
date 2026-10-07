@@ -1,10 +1,10 @@
 {% extends 'sending/include/base.html' %}
 
-{% block title %}Регистрация{% endblock %}
+{% block title %}Вход{% endblock %}
 
 {% block content %}
 
-<h1 class="text-center text-white">Регистрация</h1>
+<h1 class="text-center text-white">Вход</h1>
 
 <div class="container d-flex justify-content-center">
     <form method="post">
@@ -16,7 +16,7 @@
 </div>
 
 <p class="text-center">
-    <a href="#" class="btn btn-link">Забыли пароль?</a>
+    <a href="{% url 'users:password_recovery' %}" class="btn btn-link">Забыли пароль?</a>
 </p>
 
 {% endblock %}
