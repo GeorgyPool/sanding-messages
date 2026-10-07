@@ -42,6 +42,10 @@
 
 {% include 'sending/include/header.html' %}
 
+{% if user.is_authenticated %}
+<h6 class="text-center">Вы авторизованы как: {{ user }}</h6>
+{% endif %}
+
 <main>
     <!-- Wrap the rest of the page in another container to center all the content. -->
     <div class="container mt-5 mb-5">
