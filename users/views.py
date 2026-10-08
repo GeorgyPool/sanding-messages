@@ -3,8 +3,8 @@ import secrets
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
 
 from config.settings import EMAIL_HOST_USER
@@ -99,3 +99,29 @@ class PasswordRecoveryFormView(FormView):
 
     template_name = "users/password_recovery.html"
     form_class = RecoveryPasswordForm
+    success_url = reverse_lazy("sending:home")
+
+    def form_valid(self, form):
+        response = form.cleaned_data.get("email")
+        user = CustomUser.objects.get(email=response)
+        host = self.request.get_host()
+
+        send_mail(
+            subject="Восстановление пароля",
+            message=f"http://{host}/users/change_password/{user.token}/",
+            from_email=EMAIL_HOST_USER,
+            recipient_list=[user],
+        )
+        return super().form_valid(form)
+
+
+def change_password(request, token):
+    user = CustomUser.objects.get(token=token)
+    if request.method == "POST":
+        password = request.POST.get("password")
+        user.set_password(password)
+        user.save()
+        return redirect(reverse("users:login"))
+
+    context = {"user": user}
+    return render(request, "users/change_password.html", context=context)

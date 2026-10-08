@@ -14,4 +14,5 @@ urlpatterns = [
     path("profile_user/<int:pk>/", views.ProfileUser.as_view(), name="profile_user"),
     path("change_profile/<int:pk>/", views.ProfileUserUpdateView.as_view(), name="change_profile"),
     path("password_recovery/", views.PasswordRecoveryFormView.as_view(), name="password_recovery"),
+    path("change_password/<str:token>/", views.change_password, name="change_password"),
 ]
