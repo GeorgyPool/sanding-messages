@@ -1,6 +1,13 @@
+import secrets
+
+from django.contrib.auth.views import LoginView
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, FormView, UpdateView
+
+from config.settings import EMAIL_HOST_USER
 
 from .forms import (ChangeProfileUser, RecoveryPasswordForm,
                     UserRegistrationForm)
@@ -16,6 +23,49 @@ class RegistrationUserCreateView(CreateView):
     form_class = UserRegistrationForm
     template_name = "users/register_user.html"
     success_url = reverse_lazy("users:login")
+
+    def form_valid(self, form):
+        user = form.save()
+        user.is_active = False
+        token = secrets.token_hex(16)
+        user.token = token
+        user.save()
+        host = self.request.get_host()
+        url = f"http://{host}/users/checking/{token}/"
+        send_mail(subject="Подтверждение почты", message=url, from_email=EMAIL_HOST_USER, recipient_list=[user.email])
+
+        return super().form_valid(form)
+
+
+class CustomLogView(LoginView):
+    """
+    Представление для входа на сайт
+    """
+
+    template_name = "users/login.html"
+    success_url = reverse_lazy("sending:home")
+
+    def form_invalid(self, form):
+        """
+        Проверяет чтобы пользователь подтвердил почту
+        """
+        email = form.cleaned_data.get("username")
+
+        try:
+            user = CustomUser.objects.get(email=email)
+            if not user.is_active:
+                form.add_error(None, "Подтвердите почту")
+        except CustomUser.DoesNotExist:
+            form.add_error(None, "Почта не найдена")
+
+        return super().form_invalid(form)
+
+
+def verification_user(request, token):
+    user = CustomUser.objects.get(token=token)
+    user.is_active = True
+    user.save()
+    return render(request, "users/checking.html")
 
 
 class ProfileUser(DetailView):

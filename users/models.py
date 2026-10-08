@@ -7,6 +7,7 @@ class CustomUser(AbstractUser):
     phone_number = models.CharField(
         max_length=15, blank=True, null=True, verbose_name="Номер телефона", help_text="Введите номер телефона"
     )
+    token = models.CharField(blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("password1",)
