@@ -8,6 +8,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
 
 from sending import models
+from sending.services import AllInformation
 
 
 class HomeTemplateView(TemplateView):
@@ -15,14 +16,7 @@ class HomeTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recipient"] = models.Recipient.objects.all()
-        context["sendings"] = models.Sending.objects.all()
-        context["tryings"] = models.TryingSending.objects.all()
-
-        now = datetime.datetime.now().time()
-        context["active_sendings"] = models.Sending.objects.filter(start_time__lte=now, end_time__gte=now).exclude(
-            start_time__isnull=True, end_time__isnull=True
-        )
+        context = AllInformation.all_info_about_website()
 
         return context
 
