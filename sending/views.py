@@ -39,6 +39,10 @@ class RecipientCreateView(CreateView):
     fields = ["email", "full_name", "comment"]
     success_url = reverse_lazy("sending:recipient")
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class RecipientDetailView(DetailView):
     model = models.Recipient
@@ -73,6 +77,10 @@ class MessageCreateView(CreateView):
     template_name = "sending/message_form.html"
     fields = ["title", "text"]
     success_url = reverse_lazy("sending:messages")
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 class MessageDetailView(DetailView):
@@ -112,6 +120,7 @@ class SendingCreateView(CreateView):
     def form_valid(self, form):
         start = form.cleaned_data["start_time"]
         end = form.cleaned_data["end_time"]
+        form.instance.owner = self.request.user
 
         if start >= end:
             form.add_error("end_time", "Время окончания должно быть позже времени начала.")
