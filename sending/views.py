@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -26,7 +27,7 @@ class HomeTemplateView(TemplateView):
         return context
 
 
-class RecipientListView(ListView):
+class RecipientListView(LoginRequiredMixin, ListView):
     model = models.Recipient
     template_name = "sending/recipient.html"
     context_object_name = "recipient"
@@ -61,7 +62,7 @@ class RecipientDeleteView(DeleteView):
     success_url = reverse_lazy("sending:recipient")
 
 
-class MessageListView(ListView):
+class MessageListView(LoginRequiredMixin, ListView):
     model = models.Messages
     template_name = "sending/message.html"
     context_object_name = "messages"
@@ -96,7 +97,7 @@ class MessageDeleteView(DeleteView):
     success_url = reverse_lazy("sending:messages")
 
 
-class SendingListView(ListView):
+class SendingListView(LoginRequiredMixin, ListView):
     model = models.Sending
     template_name = "sending/sendings.html"
     context_object_name = "sendings"
