@@ -4,6 +4,7 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -67,5 +68,15 @@
         </div>
     </div>
 </div>
+{% else %}
+<h5 class="text-center" style="margin : 150px">Чтобы получить доступ к функционалу сайта зарегистрируйтесь или
+    войдите</h5>
+<div class="container d-flex justify-content-center">
+    <p>
+        <a href="{% url 'users:register_user' %}" class="btn btn-primary">Регистрация</a>
+        <a href="{% url 'users:login' %}" class="btn btn-outline-primary">Вход</a>
+    </p>
+</div>
+{% endif %}
 
 {% endblock %}
