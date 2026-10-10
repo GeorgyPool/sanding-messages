@@ -1,7 +1,6 @@
-from django.utils import timezone
+from datetime import datetime
 
-from sending.models import Recipient, Sending
-from users.models import CustomUser
+from sending.models import Messages, Recipient, Sending
 
 
 class AllInformation:
@@ -11,7 +10,7 @@ class AllInformation:
         """
         Возвращает общую информацию о количестве рассылок на сайте
         """
-        now = timezone.now().time()
+        now = datetime.now().time()
 
         context = {
             "recipient": Recipient.objects.all(),
@@ -22,3 +21,27 @@ class AllInformation:
         }
 
         return context
+
+
+class AllInfoForUser:
+    """
+    Возвращает пользователю информацию о его:
+    рассылках
+    сообщениях
+    получателях
+    """
+
+    @staticmethod
+    def get_all_recipient_for_his_user(user_id: int):
+        recipient = Recipient.objects.filter(owner_id=user_id)
+        return recipient
+
+    @staticmethod
+    def get_all_messages_for_his_user(user_id: int):
+        messages = Messages.objects.filter(owner_id=user_id)
+        return messages
+
+    @staticmethod
+    def get_all_sending_for_his_user(user_id: int):
+        sending = Sending.objects.filter(owner_id=user_id)
+        return sending

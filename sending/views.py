@@ -8,7 +8,7 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
 
 from sending import models
-from sending.services import AllInformation
+from sending.services import AllInfoForUser, AllInformation
 
 
 class HomeTemplateView(TemplateView):
@@ -25,6 +25,13 @@ class RecipientListView(LoginRequiredMixin, ListView):
     model = models.Recipient
     template_name = "sending/recipient.html"
     context_object_name = "recipient"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.user.id
+        queryset = AllInfoForUser.get_all_recipient_for_his_user(user_id=user_id)
+
+        return queryset
 
 
 class RecipientCreateView(CreateView):
@@ -65,6 +72,13 @@ class MessageListView(LoginRequiredMixin, ListView):
     template_name = "sending/message.html"
     context_object_name = "messages"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.user.id
+        queryset = AllInfoForUser.get_all_messages_for_his_user(user_id=user_id)
+
+        return queryset
+
 
 class MessageCreateView(CreateView):
     model = models.Messages
@@ -103,6 +117,13 @@ class SendingListView(LoginRequiredMixin, ListView):
     model = models.Sending
     template_name = "sending/sendings.html"
     context_object_name = "sendings"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.user.id
+        queryset = AllInfoForUser.get_all_sending_for_his_user(user_id=user_id)
+
+        return queryset
 
 
 class SendingCreateView(CreateView):
