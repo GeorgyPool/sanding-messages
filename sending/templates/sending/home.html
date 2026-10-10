@@ -5,6 +5,9 @@
 {% block content %}
 
 {% if user.is_authenticated %}
+
+<h5 class="text-center">Общая информация о сайте</h5>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -43,7 +46,7 @@
 </div>
 
 <div class="container d-flex justify-content-center">
-    <a class="btn btn-outline-primary" type="button" href="{% url 'sending:sendings_send' %}">Перейти к запуску
+    <a class="btn btn-outline-primary" type="button" href="{% url 'sending:sendings_send' %}">Запуск моих рассылок
         рассылок</a>
 </div>
 
