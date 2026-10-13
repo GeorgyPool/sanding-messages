@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
 
+from config.settings import EMAIL_HOST_USER
 from sending import models
 from sending.services import AllInfoForUser, AllInformation
 
@@ -185,39 +186,39 @@ class SendingDeleteView(DeleteView):
     success_url = reverse_lazy("sending:sendings")
 
 
-def sending_mail(requests):
+def sending_mail(requests, pk):
     now = datetime.datetime.now().time()
+    sending_user = models.Sending.objects.filter(owner_id=pk, start_time__lte=now, end_time__gte=now)
 
     if requests.method == "POST":
-        sendings = models.Sending.objects.filter(start_time__lte=now, end_time__gte=now)
-        if not sendings.exists():
-            return redirect("sending:home")
+        if not sending_user.exists():
+            redirect("sending:home")
 
-        for sending in sendings:
-            recipients_email = list(sending.recipients.all().values_list("email", flat=True))
-
-            message_obj = models.Messages.objects.get(id=sending.message_id)
-            message_text = message_obj.text
+        for send in sending_user:
+            recipient_list = list(send.recipients.all().values_list("email", flat=True))
+            recipient_message = models.Messages.objects.get(id=send.message_id)
 
             try:
                 send_mail(
-                    subject=message_obj.title or "Рассылка",
-                    message=message_text,
-                    from_email="noreply@example.com",
-                    recipient_list=recipients_email,
-                    fail_silently=False,
+                    subject=recipient_message.title,
+                    message=recipient_message.text,
+                    from_email=EMAIL_HOST_USER,
+                    recipient_list=recipient_list,
                 )
+
                 models.TryingSending.objects.create(
-                    status=models.TryingSending.SUCCESS, server_response="OK", mailing=sending
+                    status=models.TryingSending.SUCCESS, server_response="OK", mailing=send
                 )
+
+                return redirect("sending:home")
+
             except Exception as e:
+
                 models.TryingSending.objects.create(
-                    status=models.TryingSending.NOT_SUCCESS, server_response=f"Ошибка: {type(e)}", mailing=sending
+                    status=models.TryingSending.NOT_SUCCESS,
+                    server_response=f"Возникла ошибка {type(e)}",
+                    mailing=send,
                 )
 
-        return redirect("sending:home")
-
-    content = models.Sending.objects.filter(start_time__lt=now, end_time__gt=now)
-    context = {"sendings": content}
-
+    context = {"sendings": sending_user}
     return render(requests, "sending/sending_mail.html", context=context)
