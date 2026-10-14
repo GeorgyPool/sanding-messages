@@ -207,7 +207,7 @@ def sending_mail(requests, pk):
                 )
 
                 models.TryingSending.objects.create(
-                    status=models.TryingSending.SUCCESS, server_response="OK", mailing=send
+                    status=models.TryingSending.SUCCESS, server_response="OK", mailing=send, owner=send.owner
                 )
 
                 return redirect("sending:home")

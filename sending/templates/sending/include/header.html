@@ -26,6 +26,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">О нас</a>
                 </li>
+                {% if perms.users.management %}
+                <li>
+                    <a href="{% url 'users:all_users' %}" class="nav-link">Все пользователи</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

@@ -59,6 +59,7 @@ class TryingSending(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name="Статус попытки")
     server_response = models.TextField(verbose_name="Ответ почтового сервера")
     mailing = models.ForeignKey(Sending, on_delete=models.DO_NOTHING, related_name="sending", verbose_name="Рассылка")
+    owner = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name="user", blank=True, null=True)
 
     class Meta:
         verbose_name = "Попытка"

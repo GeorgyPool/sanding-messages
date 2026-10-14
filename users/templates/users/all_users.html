@@ -1,0 +1,32 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Все пользователи{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center">
+
+    <ul class="list-group">
+        {% for user in users %}
+        <li class="list-item">
+            <p>
+                {{ user }}
+
+                {% if user.first_name %}
+                {{ user.first_name }}
+                {% endif %}
+
+                {% if user.last_name %}
+                {{ user.last_name }}
+                {% endif %}
+
+                <a href="#" class="btn btn-link">Подробно</a>
+                <a href="#" class="btn btn-link">Редактировать</a>
+            </p>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

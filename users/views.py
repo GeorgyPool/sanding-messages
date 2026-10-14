@@ -1,11 +1,13 @@
 import secrets
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DetailView, FormView, UpdateView
+from django.views.generic import (CreateView, DetailView, FormView, ListView,
+                                  UpdateView)
 
 from config.settings import EMAIL_HOST_USER
 
@@ -125,3 +127,15 @@ def change_password(request, token):
 
     context = {"user": user}
     return render(request, "users/change_password.html", context=context)
+
+
+class AllUsersListView(PermissionRequiredMixin, ListView):
+    """
+    Представление для менеджеров: отображает список всех пользователей.
+    PermissionRequiredMixin автоматически проверяет права без них будет 403.
+    """
+
+    model = CustomUser
+    template_name = "users/all_users.html"
+    context_object_name = "users"
+    permission_required = "users.management"
