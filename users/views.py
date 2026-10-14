@@ -139,3 +139,11 @@ class AllUsersListView(PermissionRequiredMixin, ListView):
     template_name = "users/all_users.html"
     context_object_name = "users"
     permission_required = "users.management"
+
+
+class ChangedUserPermission(PermissionRequiredMixin, UpdateView):
+    model = CustomUser
+    fields = ["is_active"]
+    template_name = "users/change_profile_user_manager.html"
+    success_url = reverse_lazy("users:all_users")
+    permission_required = "users.management"

@@ -20,8 +20,9 @@
                 {{ user.last_name }}
                 {% endif %}
 
-                <a href="#" class="btn btn-link">Подробно</a>
-                <a href="#" class="btn btn-link">Редактировать</a>
+                {{ user.is_active|yesno:'активен,не активен' }}
+
+                <a href="{% url 'users:change_activate' user.pk %}" class="btn btn-link">Редактировать</a>
             </p>
         </li>
         {% endfor %}
