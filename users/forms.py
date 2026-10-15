@@ -30,16 +30,7 @@ class UserRegistrationForm(UserCreationForm):
 class ChangeProfileUser(forms.ModelForm):
     class Meta:
         model = CustomUser
-        exclude = (
-            "password",
-            "is_active",
-            "is_staff",
-            "date_joined",
-            "groups",
-            "is_superuser",
-            "user_permissions",
-            "last_login",
-        )
+        fields = ("first_name", "last_name", "email", "phone_number", "username")
 
     def __init__(self, *args, **kwargs):
         super(ChangeProfileUser, self).__init__(*args, **kwargs)

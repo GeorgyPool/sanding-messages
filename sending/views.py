@@ -9,6 +9,8 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 
 from config.settings import EMAIL_HOST_USER
 from sending import models
+from sending.forms import FormSendingCreateView
+from sending.models import Messages, Recipient, Sending
 from sending.services import AllInfoForUser, AllInformation
 
 
@@ -121,31 +123,34 @@ class SendingListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        user_id = self.request.user.id
-        queryset = AllInfoForUser.get_all_sending_for_his_user(user_id=user_id)
 
-        return queryset
+        if self.request.user.has_perm("users.management"):
+            queryset = Sending.objects.all()
+            return queryset
+
+        else:
+            user_id = self.request.user.id
+            queryset = AllInfoForUser.get_all_sending_for_his_user(user_id=user_id)
+            return queryset
 
 
 class SendingCreateView(CreateView):
     model = models.Sending
     template_name = "sending/sendings_form.html"
-    fields = ["start_time", "end_time", "message", "recipients"]
     success_url = reverse_lazy("sending:sendings")
 
+    def get_form(self, form_class=FormSendingCreateView):
+        user_id = self.request.user.id
+        form = super().get_form(form_class)
+        form.fields["message"].queryset = AllInfoForUser.get_all_messages_for_his_user(user_id=user_id)
+        form.fields["recipients"].queryset = AllInfoForUser.get_all_recipient_for_his_user(user_id=user_id)
+
+        return form
+
     def form_valid(self, form):
-        start = form.cleaned_data["start_time"]
-        end = form.cleaned_data["end_time"]
         form.instance.owner = self.request.user
-
-        if start >= end:
-            form.add_error("end_time", "Время окончания должно быть позже времени начала.")
-            return self.form_invalid(form)
-
+        form.save()
         return super().form_valid(form)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
 
 class SendingDetailView(DetailView):
