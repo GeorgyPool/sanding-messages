@@ -22,7 +22,7 @@ class Messages(models.Model):
     text = models.TextField(verbose_name="Сообщение", help_text="Введите сообщение")
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="message", blank=True, null=True)
 
-    class Mete:
+    class Meta:
         verbose_name = "Письмо"
         verbose_name_plural = "Письма"
 
