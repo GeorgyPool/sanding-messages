@@ -44,6 +44,9 @@ class Sending(models.Model):
     recipients = models.ManyToManyField(Recipient, related_name="getting")
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sending", blank=True, null=True)
 
+    def __str__(self):
+        return str(self.message)
+
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
