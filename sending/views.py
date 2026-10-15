@@ -32,9 +32,12 @@ class RecipientListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         user_id = self.request.user.id
-        queryset = AllInfoForUser.get_all_recipient_for_his_user(user_id=user_id)
-
-        return queryset
+        if self.request.user.has_perm("users.management"):
+            queryset = Recipient.objects.all()
+            return queryset
+        else:
+            queryset = AllInfoForUser.get_all_recipient_for_his_user(user_id=user_id)
+            return queryset
 
 
 class RecipientCreateView(CreateView):
