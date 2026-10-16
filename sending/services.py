@@ -15,7 +15,7 @@ class AllInformation:
         context = {
             "recipient": Recipient.objects.all(),
             "sendings": Sending.objects.all(),
-            "active_sendings": Sending.objects.filter(start_time__lte=now, end_time__gte=now).exclude(
+            "active_sendings": Sending.objects.filter(start_time__lte=now, end_time__gte=now, is_active=True).exclude(
                 start_time__isnull=True, end_time__isnull=True
             ),
         }

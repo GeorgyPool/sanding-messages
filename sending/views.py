@@ -1,9 +1,12 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   TemplateView, UpdateView)
 
@@ -18,8 +21,10 @@ class HomeTemplateView(TemplateView):
     template_name = "sending/home.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context = AllInformation.all_info_about_website()
+        context = cache.get("home")
+        if not context:
+            context = AllInformation.all_info_about_website()
+            cache.set("home", context, 60 * 15)
 
         return context
 
@@ -258,3 +263,8 @@ def activation_of_the_mailing_list(request, pk):
         sending.is_active = True
         sending.save()
         return redirect("sending:sendings_detail", pk=pk)
+
+
+@method_decorator(cache_page(60 * 15), name="dispatch")
+class AboutUsTemplateView(TemplateView):
+    template_name = "sending/about_us.html"

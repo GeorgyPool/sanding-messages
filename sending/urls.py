@@ -27,4 +27,5 @@ urlpatterns = [
     path("sending/user_statistics/", views.TryingSendingListView.as_view(), name="user_statistics"),
     path("sending/deactivation/<int:pk>/", views.deactivation_of_the_mailing_list, name="sending_deactivation"),
     path("sending/activate/<int:pk>/", views.activation_of_the_mailing_list, name="sending_activate"),
+    path("sending/about_us/", views.AboutUsTemplateView.as_view(), name="about_us"),
 ]

@@ -24,7 +24,7 @@
                 </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">О нас</a>
+                    <a class="nav-link" href="{% url 'sending:about_us' %}">О нас</a>
                 </li>
                 {% if perms.users.management %}
                 <li>
