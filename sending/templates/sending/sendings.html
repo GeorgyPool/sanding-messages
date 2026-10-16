@@ -26,6 +26,9 @@
                 <p>
                     <a class="btn btn-outline-light" href="{% url 'sending:sendings_detail' info.pk %}">Подробно</a>
                 </p>
+                <span class="bg-gradient text-white rounded-2 {% if info.is_active %}bg-primary{% elif not info.is_active %}bg-danger{% endif %}">
+                    {{ info.is_active|yesno:'Активна,Не активна' }}
+                </span>
             </div>
         </div>
     </div>

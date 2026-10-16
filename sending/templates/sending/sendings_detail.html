@@ -8,6 +8,12 @@
     <a class="btn btn-outline-primary" href="{% url 'sending:sendings' %}">назад</a>
 </div>
 
+<div class="container d-flex justify-content-end">
+    <div class="text-white rounded-2 {% if sendings.is_active %}bg-primary bg-gradient{% elif not sendings.is_active %}bg-danger bg-gradient{% endif %}">
+        Рассылка: {{ sendings.is_active|yesno:'Активна,Не активна' }}
+    </div>
+</div>
+
 <div class="container d-flex justify-content-center">
     <div class="card mb-4 rounded-5">
         <div class="card-body bg-primary bg-gradient rounded-5">
@@ -50,11 +56,29 @@
     </div>
 </div>
 
+{% if user == sendings.owner %}
 <div class="container d-flex justify-content-center mt-5">
     <p>
         <a class="btn btn-outline-primary me-2 ms-2" href="{% url 'sending:sendings_update' sendings.pk %}">Редактировать</a>
         <a class="btn btn-danger me-2 ms-2" href="{% url 'sending:sendings_delete' sendings.pk %}">Удалить</a>
     </p>
 </div>
+{% endif %}
+
+{% if perms.users.management %}
+<div class="container d-flex justify-content-center mt-5">
+    {% if sendings.is_active %}
+    <form method="post" action="{% url 'sending:sending_deactivation' sendings.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Деактивировать</button>
+    </form>
+    {% else %}
+    <form method="post" action="{% url 'sending:sending_activate' sendings.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Активировать</button>
+    </form>
+    {% endif %}
+</div>
+{% endif %}
 
 {% endblock %}

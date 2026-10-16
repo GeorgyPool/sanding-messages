@@ -1,0 +1,15 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Подтверждение{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+    <h1>Почта успешно подтверждена</h1>
+</div>
+
+<div class="container d-flex justify-content-center">
+    <a href="{% url 'users:login' %}" class="btn btn-primary">Вход</a>
+</div>
+
+{% endblock %}

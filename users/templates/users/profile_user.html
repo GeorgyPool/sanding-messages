@@ -1,0 +1,23 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center mt-5 mb-5">Ваш профиль</h1>
+
+<div class="container d-flex justify-content-center">
+    <div class="col-4">
+        <p>Электронная почта: {{ user.email }}</p>
+        <p>Номер телефона: {{ user.phone_number|default:'Номер не указан' }}</p>
+        <p>Имя: {{ user.first_name|default:'Не указано' }}</p>
+        <p>Фамилия: {{ user.last_name|default:'Не указано' }}</p>
+        <p>Ник: {{ user.username|default:'Не указано' }}</p>
+    </div>
+</div>
+
+<div class="col-12 text-center">
+    <a href="{% url 'users:change_profile' user.pk %}" class="btn btn-primary">Редактировать</a>
+</div>
+
+{% endblock %}
