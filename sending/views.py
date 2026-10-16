@@ -196,7 +196,7 @@ class SendingDeleteView(DeleteView):
 
 def sending_mail(requests, pk):
     now = datetime.datetime.now().time()
-    sending_user = models.Sending.objects.filter(owner_id=pk, start_time__lte=now, end_time__gte=now)
+    sending_user = models.Sending.objects.filter(owner_id=pk, start_time__lte=now, end_time__gte=now, is_active=True)
 
     if requests.method == "POST":
         if not sending_user.exists():
