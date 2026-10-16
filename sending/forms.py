@@ -8,7 +8,7 @@ from sending.services import AllInfoForUser
 class FormSendingCreateView(forms.ModelForm):
     class Meta:
         model = Sending
-        exclude = ("status", "owner")
+        exclude = ("status", "owner", "is_active")
 
     def __init__(self, *args, **kwargs):
         super(FormSendingCreateView, self).__init__(*args, **kwargs)

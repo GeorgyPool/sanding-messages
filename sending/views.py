@@ -10,8 +10,8 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
 from config.settings import EMAIL_HOST_USER
 from sending import models
 from sending.forms import FormSendingCreateView
-from sending.models import Messages, Recipient, Sending
-from sending.services import AllInfoForUser, AllInformation
+from sending.models import Recipient, Sending, TryingSending
+from sending.services import AllInfoForUser, AllInformation, StatisticsForUser
 
 
 class HomeTemplateView(TemplateView):
@@ -230,3 +230,15 @@ def sending_mail(requests, pk):
 
     context = {"sendings": sending_user}
     return render(requests, "sending/sending_mail.html", context=context)
+
+
+class TryingSendingListView(ListView):
+    model = TryingSending
+    template_name = "sending/user_statistics.html"
+    context_object_name = "statistics"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        user_id = self.request.user.id
+        queryset = StatisticsForUser.get_statistic_for_his_user(user_id=user_id)
+        return queryset

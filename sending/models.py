@@ -43,6 +43,7 @@ class Sending(models.Model):
     message = models.ForeignKey(Messages, on_delete=models.DO_NOTHING)
     recipients = models.ManyToManyField(Recipient, related_name="getting")
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="sending", blank=True, null=True)
+    is_active = models.BooleanField(verbose_name="Активная рассылка", null=True, blank=True, default=True)
 
     def __str__(self):
         return str(self.message)

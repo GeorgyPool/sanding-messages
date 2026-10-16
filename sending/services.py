@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sending.models import Messages, Recipient, Sending
+from sending.models import Messages, Recipient, Sending, TryingSending
 
 
 class AllInformation:
@@ -45,3 +45,14 @@ class AllInfoForUser:
     def get_all_sending_for_his_user(user_id: int):
         sending = Sending.objects.filter(owner_id=user_id)
         return sending
+
+
+class StatisticsForUser:
+    """
+    Получает статистику для конкретного пользователя
+    """
+
+    @staticmethod
+    def get_statistic_for_his_user(user_id: int):
+        statistics = TryingSending.objects.filter(owner_id=user_id)
+        return statistics

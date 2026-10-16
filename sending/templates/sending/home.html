@@ -46,6 +46,7 @@
 </div>
 
 <div class="container d-flex justify-content-center">
+    <a href="{% url 'sending:user_statistics' %}" class="btn btn-outline-primary me-2">Моя статистика</a>
     <a class="btn btn-outline-primary" type="button" href="{% url 'sending:sendings_send' user.pk %}">Запуск моих рассылок
         рассылок</a>
 </div>
