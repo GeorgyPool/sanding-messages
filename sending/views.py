@@ -242,3 +242,19 @@ class TryingSendingListView(ListView):
         user_id = self.request.user.id
         queryset = StatisticsForUser.get_statistic_for_his_user(user_id=user_id)
         return queryset
+
+
+def deactivation_of_the_mailing_list(request, pk):
+    if request.method == "POST":
+        sending = Sending.objects.get(pk=pk)
+        sending.is_active = False
+        sending.save()
+        return redirect("sending:sendings_detail", pk=pk)
+
+
+def activation_of_the_mailing_list(request, pk):
+    if request.method == "POST":
+        sending = Sending.objects.get(pk=pk)
+        sending.is_active = True
+        sending.save()
+        return redirect("sending:sendings_detail", pk=pk)
