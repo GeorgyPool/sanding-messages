@@ -1,0 +1,33 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Ваша статистика{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center">
+
+    {% if statistics %}
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for statistic in statistics %}
+
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body rounded-2 text-white {% if statistic.server_response == 'OK' %}bg-primary bg-gradient{% else %}bg-danger bg-gradient{% endif %}">
+                    <h5 class="card-title">{{ statistic.attempt_time }}</h5>
+                    <p class="card-text">Статус: {{ statistic.status }}</p>
+                    <p class="card-text">Ответ почтового сервера: {{ statistic.server_response }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <h1>Пока статистика пуста</h1>
+    {% endif %}
+
+</div>
+
+{% endblock %}

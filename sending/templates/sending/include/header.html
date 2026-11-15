@@ -1,11 +1,37 @@
 <header data-bs-theme="dark" style="margin : 100px">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'sending:home' %}">На главную</a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#">О нас</a></li>
-                </ul>
-            </div>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'sending:home' %}">На главную</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li>
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link active">Выход</button>
+                    </form>
+                </li>
+                <li>
+                    <a href="{% url 'users:profile_user' user.pk %}" class="nav-link active">Профиль</a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'users:register_user' %}" class="nav-link active">Регистрация</a>
+                </li>
+                <li>
+                    <a href="{% url 'users:login' %}" class="nav-link active">Вход</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'sending:about_us' %}">О нас</a>
+                </li>
+                {% if perms.users.management %}
+                <li>
+                    <a href="{% url 'users:all_users' %}" class="nav-link">Все пользователи</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 </header>

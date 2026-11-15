@@ -1,0 +1,16 @@
+{% extends 'sending/include/base.html' %}
+
+{% block title %}Изменить профиль{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{% url 'users:all_users' %}" class="btn btn-danger">Отмена</a>
+    </form>
+</div>
+
+{% endblock %}
